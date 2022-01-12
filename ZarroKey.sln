@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31605.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ZarroKey", "ZarroKey\ZarroKey.vcxproj", "{4265CA64-4F02-430E-8184-27DF9C0F0D76}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{B0A6BD04-8B08-4B16-928C-35F1D2C78373}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4265CA64-4F02-430E-8184-27DF9C0F0D76}.Debug|x64.ActiveCfg = Debug|x64
+		{4265CA64-4F02-430E-8184-27DF9C0F0D76}.Debug|x64.Build.0 = Debug|x64
+		{4265CA64-4F02-430E-8184-27DF9C0F0D76}.Debug|x86.ActiveCfg = Debug|Win32
+		{4265CA64-4F02-430E-8184-27DF9C0F0D76}.Debug|x86.Build.0 = Debug|Win32
+		{4265CA64-4F02-430E-8184-27DF9C0F0D76}.Release|x64.ActiveCfg = Release|x64
+		{4265CA64-4F02-430E-8184-27DF9C0F0D76}.Release|x64.Build.0 = Release|x64
+		{4265CA64-4F02-430E-8184-27DF9C0F0D76}.Release|x86.ActiveCfg = Release|Win32
+		{4265CA64-4F02-430E-8184-27DF9C0F0D76}.Release|x86.Build.0 = Release|Win32
+		{B0A6BD04-8B08-4B16-928C-35F1D2C78373}.Debug|x64.ActiveCfg = Debug
+		{B0A6BD04-8B08-4B16-928C-35F1D2C78373}.Debug|x86.ActiveCfg = Debug
+		{B0A6BD04-8B08-4B16-928C-35F1D2C78373}.Release|x64.ActiveCfg = Release
+		{B0A6BD04-8B08-4B16-928C-35F1D2C78373}.Release|x86.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DAD5A7F-2F7E-42E9-A85C-E623538CFA8D}
+	EndGlobalSection
+EndGlobal
