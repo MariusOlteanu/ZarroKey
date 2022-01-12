@@ -1,0 +1,21 @@
+# ======================= #
+# Visual Studio generated #
+# ======================= #
+$bin/
+$temp/
+.vs/
+*.aps
+*.opensdf
+*.opendb
+*.sdf
+*.suo
+*.user
+*.png
+*.db
+*.log
+*.exe
+ 
+# ============ #
+# OS generated #
+# ============ #
+Thumbs.db
