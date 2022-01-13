@@ -24,7 +24,7 @@
 #define PRODUCT_VERSION_MAJOR           2
 #define PRODUCT_VERSION_MINOR           0
 #define PRODUCT_VERSION_MAINTENANCE     1
-#define PRODUCT_VERSION_BUILD           000
+#define PRODUCT_VERSION_BUILD           002
 #define REVISION_NUMBER                 0
 
 #define FILE_VERSION_MAJOR              PRODUCT_VERSION_MAJOR

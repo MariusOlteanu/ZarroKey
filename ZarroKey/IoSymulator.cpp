@@ -82,37 +82,37 @@ void IoSymulator::Start()
 //    this->hookMouse = ::SetWindowsHookExW(WH_MOUSE_LL, (HOOKPROC)IoSymulator::MouseEvent, instance, 0);
 }
 
-void IoSymulator::Click(INPUT (&input)[1])
+void IoSymulator::Click(INPUT& input)
 {
-    input[0].type = INPUT_MOUSE;
-    input[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+    input.type = INPUT_MOUSE;
+    input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
 }
 
-void IoSymulator::Move(INPUT (&input)[1], int32_t positionX, int32_t positionY)
+void IoSymulator::Move(INPUT& input, int32_t positionX, int32_t positionY)
 {
-    input[0].type = INPUT_MOUSE;
-    input[0].mi.dx = positionX;
-    input[0].mi.dy = positionY;
-    input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+    input.type = INPUT_MOUSE;
+    input.mi.dx = positionX;
+    input.mi.dy = positionY;
+    input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
 }
 
-void IoSymulator::MoveRelative(INPUT (&input)[1], int32_t positionX, int32_t positionY)
+void IoSymulator::MoveRelative(INPUT& input, int32_t positionX, int32_t positionY)
 {
-    input[0].type = INPUT_MOUSE;
-    input[0].mi.dx = (LONG)((this->screen * positionX) / ((float)1080 / 1920));
-    input[0].mi.dy = positionY;
-    input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+    input.type = INPUT_MOUSE;
+    input.mi.dx = (LONG)((this->screen * positionX) / ((float)1080 / 1920));
+    input.mi.dy = positionY;
+    input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
 }
 
-void IoSymulator::MoveAndClick(INPUT (&input)[1], int32_t positionX, int32_t positionY)
+void IoSymulator::MoveAndClick(INPUT& input, int32_t positionX, int32_t positionY)
 {
-    input[0].type = INPUT_MOUSE;
-    input[0].mi.dx = positionX;
-    input[0].mi.dy = positionY;
-    input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+    input.type = INPUT_MOUSE;
+    input.mi.dx = positionX;
+    input.mi.dy = positionY;
+    input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
 }
 
-void IoSymulator::MoveAndClick3(INPUT(&input)[3], int32_t positionX, int32_t positionY)
+void IoSymulator::MoveAndClick3(INPUT (&input)[3], int32_t positionX, int32_t positionY)
 {
     for (int32_t index = 0; index < 2; index++)
     {
@@ -123,15 +123,15 @@ void IoSymulator::MoveAndClick3(INPUT(&input)[3], int32_t positionX, int32_t pos
     }
 }
 
-void IoSymulator::MoveAndClickRelative(INPUT (&input)[1], int32_t positionX, int32_t positionY)
+void IoSymulator::MoveAndClickRelative(INPUT& input, int32_t positionX, int32_t positionY)
 {
-    input[0].type = INPUT_MOUSE;
-    input[0].mi.dx = (LONG)((this->screen * positionX) / ((float)1080 / 1920));
-    input[0].mi.dy = positionY;
-    input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+    input.type = INPUT_MOUSE;
+    input.mi.dx = (LONG)((this->screen * positionX) / ((float)1080 / 1920));
+    input.mi.dy = positionY;
+    input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
 }
 
-void IoSymulator::MoveAndClickRelative3(INPUT(&input)[3], int32_t positionX, int32_t positionY)
+void IoSymulator::MoveAndClickRelative3(INPUT (&input)[3], int32_t positionX, int32_t positionY)
 {
     for (int32_t index = 0; index < 2; index++)
     {
@@ -159,11 +159,11 @@ void IoSymulator::PressEnter(INPUT (&input)[2], DWORD wait)
     IoSymulator::keyPressedByUs = false;
 }
 
-void IoSymulator::PressShift(INPUT (&input)[1], DWORD flags)
+void IoSymulator::PressShift(INPUT& input, DWORD flags)
 {
-    input[0].type = INPUT_KEYBOARD;
-    input[0].ki.wVk = VK_SHIFT;
-    input[0].ki.dwFlags = flags;
+    input.type = INPUT_KEYBOARD;
+    input.ki.wVk = VK_SHIFT;
+    input.ki.dwFlags = flags;
 }
 
 void IoSymulator::DestroyItems(bool repair)
@@ -180,23 +180,23 @@ void IoSymulator::DestroyItems(bool repair)
     IoSymulator::keyPressedByUs = true;
 
 #pragma warning( suppress: 6011 )
-    this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[0]));
+    this->PressShift(input[0]);
 
     if (repair)
     {
-        this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[1]), 17400, 37100);
-        this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[2]), 8900, 32400);
+        this->MoveAndClickRelative(input[1], 17400, 37100);
+        this->MoveAndClickRelative(input[2], 8900, 32400);
     }
 
-    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[3 - adjust]), 17400, 29100);
-    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[4 - adjust]), 13100, 17800);
-    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[5 - adjust]), 29000, 22500);
+    this->MoveAndClickRelative(input[1 + adjust], 17400, 29100);
+    this->MoveAndClickRelative(input[2 + adjust], 13100, 17800);
+    this->MoveAndClick(input[3 + adjust], 29000, 22500);
 
-    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[6 - adjust]), 10880, 17800);
-    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[7 - adjust]), 29000, 22500);
+    this->MoveAndClickRelative(input[4 + adjust], 10880, 17800);
+    this->MoveAndClick(input[5 + adjust], 29000, 22500);
 
-    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[8 - adjust]), 8615, 17800);
-    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[9 - adjust]), 29000, 22500);
+    this->MoveAndClickRelative(input[6 + adjust], 8615, 17800);
+    this->MoveAndClick(input[7 + adjust], 29000, 22500);
 
     POINT point;
     ::GetCursorPos(&point);
@@ -204,15 +204,54 @@ void IoSymulator::DestroyItems(bool repair)
     int32_t pointX = point.x * 65535 / screenX;
     int32_t pointY = point.y * 65535 / screenY;
 
-    this->Move(reinterpret_cast<INPUT(&)[1]>(input[10 - adjust]), pointX, pointY);
+    this->Move(input[10 - adjust], pointX, pointY);
 
-    this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[11 - adjust]), KEYEVENTF_KEYUP);
+    this->PressShift(input[11 - adjust], KEYEVENTF_KEYUP);
 
     ::SendInput(ARRAYSIZE(input) - adjust, input, sizeof(*input));
 
     IoSymulator::keyPressedByUs = false;
 
     this->destroyItems = false;
+}
+
+void IoSymulator::DestroyAncient()
+{
+    INPUT input[7] = { };
+
+    int32_t screenX = ::GetSystemMetrics(SM_CXSCREEN) - 1;
+    int32_t screenY = ::GetSystemMetrics(SM_CYSCREEN) - 1;
+
+    this->screen = (float)screenY / screenX;
+
+    IoSymulator::keyPressedByUs = true;
+
+    POINT point;
+    ::GetCursorPos(&point);
+
+    int32_t pointX = point.x * 65535 / screenX;
+    int32_t pointY = point.y * 65535 / screenY;
+
+    if ((65535 - pointX) < (int32_t)((this->screen * 18030) / ((float)1080 / 1920)) && pointY > 33200 && pointY < 52400)
+    {
+#pragma warning( suppress: 6011 )
+        this->PressShift(input[0]);
+
+        this->MoveAndClickRelative(input[1], 17400, 29100);
+
+        this->MoveAndClick(input[2], pointX, pointY);
+        this->MoveAndClickRelative(input[3], 5700, 17800);
+
+        this->MoveAndClick(input[4], 29000, 22500);
+
+        this->Move(input[5], pointX, pointY);
+
+        this->PressShift(input[6], KEYEVENTF_KEYUP);
+
+        ::SendInput(ARRAYSIZE(input), input, sizeof(*input));
+    }
+
+    IoSymulator::keyPressedByUs = false;
 }
 
 int64_t IoSymulator::MyGetCurrentTime()
@@ -281,41 +320,7 @@ LRESULT IoSymulator::Keyboard(int32_t code, WPARAM wParam, LPARAM lParam)
             }
             else
             {
-                INPUT input[7] = { };
-
-                int32_t screenX = ::GetSystemMetrics(SM_CXSCREEN) - 1;
-                int32_t screenY = ::GetSystemMetrics(SM_CYSCREEN) - 1;
-
-                this->screen = (float)screenY / screenX;
-
-                IoSymulator::keyPressedByUs = true;
-
-                POINT point;
-                ::GetCursorPos(&point);
-
-                int32_t pointX = point.x * 65535 / screenX;
-                int32_t pointY = point.y * 65535 / screenY;
-
-                if ((65535 - pointX) < (int32_t)((this->screen * 18030) / ((float)1080 / 1920)) && pointY > 33200 && pointY < 52400)
-                {
-#pragma warning( suppress: 6011 )
-                    this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[0]));
-
-                    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[1]), 17400, 29100);
-
-                    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[2]), pointX, pointY);
-                    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[3]), 5700, 17800);
-
-                    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[4]), 29000, 22500);
-
-                    this->Move(reinterpret_cast<INPUT(&)[1]>(input[5]), pointX, pointY);
-
-                    this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[6]), KEYEVENTF_KEYUP);
-
-                    ::SendInput(ARRAYSIZE(input), input, sizeof(*input));
-                }
-
-                IoSymulator::keyPressedByUs = false;
+                this->DestroyAncient();
             }
         }
         else if (key == VK_F3)
