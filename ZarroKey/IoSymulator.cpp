@@ -82,13 +82,10 @@ void IoSymulator::Start()
 //    this->hookMouse = ::SetWindowsHookExW(WH_MOUSE_LL, (HOOKPROC)IoSymulator::MouseEvent, instance, 0);
 }
 
-void IoSymulator::Click(INPUT (&input)[2])
+void IoSymulator::Click(INPUT (&input)[1])
 {
     input[0].type = INPUT_MOUSE;
-    input[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-
-    input[1].type = INPUT_MOUSE;
-    input[1].mi.dwFlags = MOUSEEVENTF_LEFTUP;
+    input[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
 }
 
 void IoSymulator::Move(INPUT (&input)[1], int32_t positionX, int32_t positionY)
@@ -107,16 +104,42 @@ void IoSymulator::MoveRelative(INPUT (&input)[1], int32_t positionX, int32_t pos
     input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
 }
 
-void IoSymulator::MoveAndClick(INPUT (&input)[3], int32_t positionX, int32_t positionY)
+void IoSymulator::MoveAndClick(INPUT (&input)[1], int32_t positionX, int32_t positionY)
 {
-    this->Move(reinterpret_cast<INPUT(&)[1]>(input[0]), positionX, positionY);
-    this->Click(reinterpret_cast<INPUT(&)[2]>(input[1]));
+    input[0].type = INPUT_MOUSE;
+    input[0].mi.dx = positionX;
+    input[0].mi.dy = positionY;
+    input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
 }
 
-void IoSymulator::MoveAndClickRelative(INPUT (&input)[3], int32_t positionX, int32_t positionY)
+void IoSymulator::MoveAndClick3(INPUT(&input)[3], int32_t positionX, int32_t positionY)
 {
-    this->MoveRelative(reinterpret_cast<INPUT(&)[1]>(input[0]), positionX, positionY);
-    this->Click(reinterpret_cast<INPUT(&)[2]>(input[1]));
+    for (int32_t index = 0; index < 2; index++)
+    {
+        input[0].type = INPUT_MOUSE;
+        input[0].mi.dx = positionX - 10 + index * 5;
+        input[0].mi.dy = positionY - 10 + index * 5;
+        input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+    }
+}
+
+void IoSymulator::MoveAndClickRelative(INPUT (&input)[1], int32_t positionX, int32_t positionY)
+{
+    input[0].type = INPUT_MOUSE;
+    input[0].mi.dx = (LONG)((this->screen * positionX) / ((float)1080 / 1920));
+    input[0].mi.dy = positionY;
+    input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+}
+
+void IoSymulator::MoveAndClickRelative3(INPUT(&input)[3], int32_t positionX, int32_t positionY)
+{
+    for (int32_t index = 0; index < 2; index++)
+    {
+        input[0].type = INPUT_MOUSE;
+        input[0].mi.dx = (LONG)((this->screen * (positionX - 10 + index * 5)) / ((float)1080 / 1920));
+        input[0].mi.dy = positionY - 10 + index * 5;
+        input[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+    }
 }
 
 void IoSymulator::PressEnter(INPUT (&input)[2], DWORD wait)
@@ -143,12 +166,14 @@ void IoSymulator::PressShift(INPUT (&input)[1], DWORD flags)
     input[0].ki.dwFlags = flags;
 }
 
-void IoSymulator::DestroyItems()
+void IoSymulator::DestroyItems(bool repair)
 {
-    INPUT input[30] = { };
+    INPUT input[12] = { };
 
     int32_t screenX = ::GetSystemMetrics(SM_CXSCREEN) - 1;
     int32_t screenY = ::GetSystemMetrics(SM_CYSCREEN) - 1;
+
+    uint32_t adjust = repair * 2;
 
     this->screen = (float)screenY / screenX;
 
@@ -157,19 +182,21 @@ void IoSymulator::DestroyItems()
 #pragma warning( suppress: 6011 )
     this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[0]));
 
-    MoveAndClick(reinterpret_cast<INPUT(&)[3]>(input[1]), 17400, 37100);
-    MoveAndClick(reinterpret_cast<INPUT(&)[3]>(input[4]), 8900, 32400);
+    if (repair)
+    {
+        this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[1]), 17400, 37100);
+        this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[2]), 8900, 32400);
+    }
 
-    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[3]>(input[7]), 17400, 29100);
+    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[3 - adjust]), 17400, 29100);
+    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[4 - adjust]), 13100, 17800);
+    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[5 - adjust]), 29000, 22500);
 
-    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[3]>(input[10]), 13100, 17800);
-    this->MoveAndClick(reinterpret_cast<INPUT(&)[3]>(input[13]), 29000, 22500);
+    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[6 - adjust]), 10880, 17800);
+    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[7 - adjust]), 29000, 22500);
 
-    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[3]>(input[16]), 10880, 17800);
-    this->MoveAndClick(reinterpret_cast<INPUT(&)[3]>(input[19]), 29000, 22500);
-
-    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[3]>(input[22]), 8615, 17800);
-    this->MoveAndClick(reinterpret_cast<INPUT(&)[3]>(input[25]), 29000, 22500);
+    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[8 - adjust]), 8615, 17800);
+    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[9 - adjust]), 29000, 22500);
 
     POINT point;
     ::GetCursorPos(&point);
@@ -177,11 +204,11 @@ void IoSymulator::DestroyItems()
     int32_t pointX = point.x * 65535 / screenX;
     int32_t pointY = point.y * 65535 / screenY;
 
-    this->Move(reinterpret_cast<INPUT(&)[1]>(input[28]), pointX, pointY);
+    this->Move(reinterpret_cast<INPUT(&)[1]>(input[10 - adjust]), pointX, pointY);
 
-    this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[29]), KEYEVENTF_KEYUP);
+    this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[11 - adjust]), KEYEVENTF_KEYUP);
 
-    ::SendInput(ARRAYSIZE(input), input, sizeof(*input));
+    ::SendInput(ARRAYSIZE(input) - adjust, input, sizeof(*input));
 
     IoSymulator::keyPressedByUs = false;
 
@@ -247,14 +274,14 @@ LRESULT IoSymulator::Keyboard(int32_t code, WPARAM wParam, LPARAM lParam)
             DWORD pressedCtrl = ::GetAsyncKeyState(VK_CONTROL);
             if (pressedCtrl)
             {
-                this->DestroyItems();
+                this->DestroyItems(true);
 
                 this->destroyItems = true;
                 ::SetEvent(this->waitEvent);
             }
             else
             {
-                INPUT input[15] = { };
+                INPUT input[7] = { };
 
                 int32_t screenX = ::GetSystemMetrics(SM_CXSCREEN) - 1;
                 int32_t screenY = ::GetSystemMetrics(SM_CYSCREEN) - 1;
@@ -274,15 +301,16 @@ LRESULT IoSymulator::Keyboard(int32_t code, WPARAM wParam, LPARAM lParam)
 #pragma warning( suppress: 6011 )
                     this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[0]));
 
-                    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[3]>(input[1]), 17400, 29100);
-                    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[3]>(input[4]), 5700, 17800);
+                    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[1]), 17400, 29100);
 
-                    this->MoveAndClick(reinterpret_cast<INPUT(&)[3]>(input[7]), pointX, pointY);
-                    this->MoveAndClick(reinterpret_cast<INPUT(&)[3]>(input[10]), 29000, 22500);
+                    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[2]), pointX, pointY);
+                    this->MoveAndClickRelative(reinterpret_cast<INPUT(&)[1]>(input[3]), 5700, 17800);
 
-                    this->Move(reinterpret_cast<INPUT(&)[1]>(input[13]), pointX, pointY);
+                    this->MoveAndClick(reinterpret_cast<INPUT(&)[1]>(input[4]), 29000, 22500);
 
-                    this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[14]), KEYEVENTF_KEYUP);
+                    this->Move(reinterpret_cast<INPUT(&)[1]>(input[5]), pointX, pointY);
+
+                    this->PressShift(reinterpret_cast<INPUT(&)[1]>(input[6]), KEYEVENTF_KEYUP);
 
                     ::SendInput(ARRAYSIZE(input), input, sizeof(*input));
                 }
@@ -297,7 +325,7 @@ LRESULT IoSymulator::Keyboard(int32_t code, WPARAM wParam, LPARAM lParam)
         }
         else if (key == VK_F4)
         {
-            this->DestroyItems();
+            this->DestroyItems(true);
 
             this->destroyItems = true;
             ::SetEvent(this->waitEvent);
@@ -404,7 +432,7 @@ LRESULT IoSymulator::Mouse(int32_t code, WPARAM wParam, LPARAM lParam)
         }
         else
         {
-            this->DestroyItems();
+            this->DestroyItems(true);
 
             this->destroyItems = true;
             ::SetEvent(this->waitEvent);
@@ -437,10 +465,10 @@ DWORD IoSymulator::Thread()
 
         if (destroyItems)
         {
-            ::Sleep(10);
+            ::Sleep(50);
             this->DestroyItems();
 
-            ::Sleep(10);
+            ::Sleep(50);
             this->DestroyItems();
         }
 

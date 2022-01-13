@@ -90,14 +90,16 @@ protected:
     constexpr static int32_t keyDelay = 50;
     constexpr static int32_t keyRandom = 30;
 
-    __forceinline void Click(INPUT (&input)[2]);
+    __forceinline void Click(INPUT (&input)[1]);
     __forceinline void Move(INPUT (&input)[1], int32_t positionX, int32_t positionY);
     __forceinline void MoveRelative(INPUT (&input)[1], int32_t positionX, int32_t positionY);
-    __forceinline void MoveAndClick(INPUT (&input)[3], int32_t positionX, int32_t positionY);
-    __forceinline void MoveAndClickRelative(INPUT (&input)[3], int32_t positionX, int32_t positionY);
+    __forceinline void MoveAndClick(INPUT (&input)[1], int32_t positionX, int32_t positionY);
+    __forceinline void MoveAndClick3(INPUT(&input)[3], int32_t positionX, int32_t positionY);
+    __forceinline void MoveAndClickRelative(INPUT (&input)[1], int32_t positionX, int32_t positionY);
+    __forceinline void MoveAndClickRelative3(INPUT(&input)[3], int32_t positionX, int32_t positionY);
     __forceinline void PressEnter(INPUT (&input)[2], DWORD wait = 10);
     __forceinline void PressShift(INPUT (&input)[1], DWORD flags = 0);
-    void DestroyItems();
+    void DestroyItems(bool repair = false);
 
     __forceinline int64_t MyGetCurrentTime();
 
